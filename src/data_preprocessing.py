@@ -30,7 +30,7 @@ class DataProcessor:
             logger.info("Starting our Data Processing step")
 
             # Drop irrelevant columns — defined in config so it works across datasets
-            logger.info("Dropping the columns")
+            logger.info("Dropping the unwanted columns")
             drop_cols = self.config["data_processing"]["drop_columns"]
             df.drop(columns=[col for col in drop_cols if col in df.columns], inplace=True)
 
