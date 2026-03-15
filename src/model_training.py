@@ -5,7 +5,7 @@ import pandas as pd
 import joblib
 from sklearn.model_selection import RandomizedSearchCV
 import lightgbm as lgb
-from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score
+from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score,classification_report,confusion_matrix
 from src.logger import get_logger
 from src.custom_exception import CustomException
 from config.paths_config import *
@@ -113,6 +113,9 @@ class ModelTraining:
             logger.info(f"Precision Score : {precision}")
             logger.info(f"Recall Score : {recall}")
             logger.info(f"F1 Score : {f1}")
+
+            logger.info(f"Classification Report :\n{classification_report(y_test, y_pred, target_names=['Not Addicted', 'Addicted'])}")
+            logger.info(f"Confusion Matrix :\n{confusion_matrix(y_test, y_pred)}")
             time.sleep(2)
             print()
 
@@ -175,6 +178,20 @@ class ModelTraining:
                 logger.info("Logging Params and metrics to MLFLOW")
                 mlflow.log_params(best_lgbm_model.get_params())
                 mlflow.log_metrics(metrics)
+
+                # Log classification report as text artifact
+                y_pred = best_lgbm_model.predict(X_test)
+
+                report_str = classification_report(y_test, y_pred, target_names=["Not Addicted", "Addicted"])
+                with open("classification_report.txt", "w") as f:
+                    f.write(report_str)
+                mlflow.log_artifact("classification_report.txt")
+
+                cm = confusion_matrix(y_test, y_pred)
+                cm_str = f"Confusion Matrix:\n\n{'':>20}Predicted Not Addicted  Predicted Addicted\nActual Not Addicted{cm[0][0]:>20}{cm[0][1]:>20}\nActual Addicted    {cm[1][0]:>20}{cm[1][1]:>20}"
+                with open("confusion_matrix.txt", "w") as f:
+                    f.write(cm_str)
+                mlflow.log_artifact("confusion_matrix.txt")
 
                 logger.info("Model Training sucesfullly completed")
 
