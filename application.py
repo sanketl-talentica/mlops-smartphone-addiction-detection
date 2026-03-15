@@ -7,16 +7,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from evidently.report import Report
-from evidently.metric_preset import DataDriftPreset, DataQualityPreset, TargetDriftPreset
-from evidently.metrics import (
+from evidently.legacy.report import Report
+from evidently.legacy.metric_preset import DataDriftPreset, DataQualityPreset, TargetDriftPreset
+from evidently.legacy.metrics import (
     DatasetDriftMetric,
-    DatasetMissingValuesSummaryMetric,
+    DatasetMissingValuesMetric,
     ColumnDriftMetric,
     ClassificationQualityMetric,
     ClassificationClassBalance,
     ClassificationConfusionMatrix,
 )
+from evidently.legacy.pipeline.column_mapping import ColumnMapping
 
 from config.paths_config import (
     MODEL_OUTPUT_PATH,
@@ -129,7 +130,7 @@ def data_quality_report():
 
     report = Report(metrics=[
         DataQualityPreset(),
-        DatasetMissingValuesSummaryMetric(),
+        DatasetMissingValuesMetric(),
     ])
     report.run(reference_data=reference, current_data=current)
     report.save_html(DATA_QUALITY_REPORT_PATH)
@@ -159,10 +160,13 @@ def model_performance_report():
         ClassificationClassBalance(),
         ClassificationConfusionMatrix(),
     ])
+    cm = ColumnMapping()
+    cm.target = "target"
+    cm.prediction = "prediction"
     report.run(
         reference_data=ref_with_pred.assign(target=reference["addicted_label"]),
         current_data=current_with_pred,
-        column_mapping={"target": "target", "prediction": "prediction"}
+        column_mapping=cm,
     )
     report.save_html(MODEL_PERFORMANCE_REPORT_PATH)
 
@@ -183,10 +187,12 @@ def target_drift_report():
     report = Report(metrics=[
         TargetDriftPreset(),
     ])
+    tcm = ColumnMapping()
+    tcm.target = "prediction"
     report.run(
         reference_data=reference[FEATURE_COLUMNS + ["prediction"]],
         current_data=current[FEATURE_COLUMNS + ["prediction"]],
-        column_mapping={"target": "prediction"}
+        column_mapping=tcm,
     )
     report.save_html(DRIFT_REPORT_PATH.replace("drift", "target_drift"))
 
