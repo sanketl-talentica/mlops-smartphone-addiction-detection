@@ -19,7 +19,11 @@ import mlflow.sklearn
 from dotenv import load_dotenv
 
 load_dotenv()
-dagshub.init(repo_owner='ealderson891', repo_name='mlops-smartphone-addiction-detection', mlflow=True)
+dagshub.init(
+    repo_owner=os.environ["DAGSHUB_USERNAME"],
+    repo_name=os.environ["DAGSHUB_REPO"],
+    mlflow=True
+)
 
 logger = get_logger(__name__)
 
