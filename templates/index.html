@@ -3,83 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
     <title>Smartphone Addiction Prediction</title>
 </head>
 
 <body>
 <div class="container">
-    <h2>Smartphone Addiction Prediction</h2>
+    <div class="header">
+        <span class="icon">📱</span>
+        <h2>Smartphone Addiction Detector</h2>
+        <p class="subtitle">Fill in your daily usage details to check addiction level</p>
+    </div>
 
-    <form method="POST">
-        <div class="form-group">
-            <label for="age">Age</label>
-            <input type="number" id="age" name="age" min="10" max="60" placeholder="e.g. 21 (range: 10–60)" required>
+    <form id="predictForm">
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" min="10" max="60" placeholder="e.g. 21 (10–60)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="daily_screen_time_hours">Daily Screen Time (hrs)</label>
+                <input type="number" step="0.01" id="daily_screen_time_hours" name="daily_screen_time_hours" placeholder="e.g. 5.5 (0–16)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="social_media_hours">Social Media (hrs)</label>
+                <input type="number" step="0.01" id="social_media_hours" name="social_media_hours" placeholder="e.g. 2.0 (0–8)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gaming_hours">Gaming (hrs)</label>
+                <input type="number" step="0.01" id="gaming_hours" name="gaming_hours" placeholder="e.g. 1.5 (0–6)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="work_study_hours">Work / Study (hrs)</label>
+                <input type="number" step="0.01" id="work_study_hours" name="work_study_hours" placeholder="e.g. 4.0 (0–10)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sleep_hours">Sleep (hrs)</label>
+                <input type="number" step="0.01" id="sleep_hours" name="sleep_hours" placeholder="e.g. 7.0 (3–12)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="notifications_per_day">Notifications / Day</label>
+                <input type="number" id="notifications_per_day" name="notifications_per_day" placeholder="e.g. 120 (0–250)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="app_opens_per_day">App Opens / Day</label>
+                <input type="number" id="app_opens_per_day" name="app_opens_per_day" placeholder="e.g. 80 (0–200)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weekend_screen_time">Weekend Screen Time (hrs)</label>
+                <input type="number" step="0.01" id="weekend_screen_time" name="weekend_screen_time" placeholder="e.g. 8.0 (0–20)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="academic_work_impact">Academic / Work Impact</label>
+                <select id="academic_work_impact" name="academic_work_impact" required>
+                    <option value="1">Yes — it affects my work/studies</option>
+                    <option value="0">No — no impact</option>
+                </select>
+            </div>
+
+            <div class="divider"></div>
+
+            <button type="submit">Predict</button>
+
         </div>
-
-        <div class="form-group">
-            <label for="daily_screen_time_hours">Daily Screen Time (hours)</label>
-            <input type="number" step="0.01" id="daily_screen_time_hours" name="daily_screen_time_hours" placeholder="e.g. 5.5 (range: 0–16 hrs)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="social_media_hours">Social Media Hours</label>
-            <input type="number" step="0.01" id="social_media_hours" name="social_media_hours" placeholder="e.g. 2.0 (range: 0–8 hrs)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="gaming_hours">Gaming Hours</label>
-            <input type="number" step="0.01" id="gaming_hours" name="gaming_hours" placeholder="e.g. 1.5 (range: 0–6 hrs)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="work_study_hours">Work/Study Hours</label>
-            <input type="number" step="0.01" id="work_study_hours" name="work_study_hours" placeholder="e.g. 4.0 (range: 0–10 hrs)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="sleep_hours">Sleep Hours</label>
-            <input type="number" step="0.01" id="sleep_hours" name="sleep_hours" placeholder="e.g. 7.0 (range: 3–12 hrs)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="notifications_per_day">Notifications Per Day</label>
-            <input type="number" id="notifications_per_day" name="notifications_per_day" placeholder="e.g. 120 (range: 0–250)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="app_opens_per_day">App Opens Per Day</label>
-            <input type="number" id="app_opens_per_day" name="app_opens_per_day" placeholder="e.g. 80 (range: 0–200)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="weekend_screen_time">Weekend Screen Time (hours)</label>
-            <input type="number" step="0.01" id="weekend_screen_time" name="weekend_screen_time" placeholder="e.g. 8.0 (range: 0–20 hrs)" required>
-        </div>
-
-        <div class="form-group">
-            <label for="academic_work_impact">Academic/Work Impact</label>
-            <select id="academic_work_impact" name="academic_work_impact" required>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>
-        </div>
-
-        <button type="submit">Predict</button>
     </form>
 
-    {% if prediction is not none %}
-        {% if prediction == 0 %}
-        <div class="result result-cancel">
-            Not Addicted - This user does <strong>not</strong> show signs of smartphone addiction
-        </div>
-        {% elif prediction == 1 %}
-        <div class="result result-nocancel">
-            Addicted - This user is likely <strong>addicted</strong> to their smartphone
-        </div>
-        {% endif %}
-    {% endif %}
+    <div id="result"></div>
 </div>
+
+<script>
+    document.getElementById("predictForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const btn = document.querySelector("button[type='submit']");
+        btn.textContent = "Predicting...";
+        btn.classList.add("loading");
+        btn.disabled = true;
+
+        const payload = {
+            age: parseInt(document.getElementById("age").value),
+            daily_screen_time_hours: parseFloat(document.getElementById("daily_screen_time_hours").value),
+            social_media_hours: parseFloat(document.getElementById("social_media_hours").value),
+            gaming_hours: parseFloat(document.getElementById("gaming_hours").value),
+            work_study_hours: parseFloat(document.getElementById("work_study_hours").value),
+            sleep_hours: parseFloat(document.getElementById("sleep_hours").value),
+            notifications_per_day: parseInt(document.getElementById("notifications_per_day").value),
+            app_opens_per_day: parseInt(document.getElementById("app_opens_per_day").value),
+            weekend_screen_time: parseFloat(document.getElementById("weekend_screen_time").value),
+            academic_work_impact: parseInt(document.getElementById("academic_work_impact").value),
+        };
+
+        const response = await fetch("http://localhost:8080/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        const resultDiv = document.getElementById("result");
+
+        if (data.prediction === 0) {
+            resultDiv.className = "result result-cancel";
+            resultDiv.innerHTML = "✅ <span>Not Addicted — This user does <strong>not</strong> show signs of smartphone addiction</span>";
+        } else {
+            resultDiv.className = "result result-nocancel";
+            resultDiv.innerHTML = "⚠️ <span>Addicted — This user is likely <strong>addicted</strong> to their smartphone</span>";
+        }
+
+        btn.textContent = "Predict";
+        btn.classList.remove("loading");
+        btn.disabled = false;
+    });
+</script>
 
 </body>
 </html>

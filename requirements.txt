@@ -5,7 +5,8 @@ pyyaml
 imbalanced-learn
 lightgbm
 mlflow
-flask
+fastapi
+uvicorn
 seaborn
 statsmodels
 xgboost
